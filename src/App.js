@@ -1,40 +1,26 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ThemeProvider } from 'styled-components';
-import GlobalStyle from './styles/global';
+import React, { Component } from 'react';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import Layout from './Components/Layout';
+import GlobalStyle from './styles/global';
 import themes from './styles/themes';
+import { ThemeContext, ThemeProvider } from './contexts/ThemeContext';
 
-function App() {
-  const [theme, setTheme] = useState(
-    JSON.parse(localStorage.getItem('theme'), removeLocalStorage())
-  );
+class App extends Component {
+  render() {
+    const { theme } = this.state
 
-  let FirstRender = useRef(true);
+    return (
+      <ThemeProvider>
+        <ThemeContext.Consumer>
+          {({ theme }) => (<StyledThemeProvider theme={themes[theme] || themes.dark}>
+            <GlobalStyle />
+            <Layout
+              selectedTheme={theme}
+            />
+          </StyledThemeProvider>)}
 
-  const currentTheme = useMemo(() => {
-    return themes[theme] || themes.dark;
-  }, [theme]);
-  function removeLocalStorage() {
-    localStorage.removeItem('theme');
+        </ThemeContext.Consumer>
+      </ThemeProvider>
+    );
   }
-  function handleToggleTheme() {
-    setTheme((prevState) => (prevState === 'dark' ? 'light' : 'dark'));
-  }
-  useEffect(() => {
-    if (FirstRender.current) {
-      FirstRender.current = false;
-      return;
-    }
-  });
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(theme));
-  }, [theme]);
-
-  return (
-    <ThemeProvider theme={currentTheme}>
-      <GlobalStyle />
-      <Layout onToggleTheme={handleToggleTheme} selectedTheme={theme} />
-    </ThemeProvider>
-  );
 }
-export default App;
