@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import Header from '../Header';
-import PostsList from '../PostsList';
+import { BrowserRouter, Link } from 'react-router-dom';
+import Routes from '../../Routes';
 import Footer from '../Footer';
+import Header from '../Header';
 
 export default function Layout({ onToggleTheme, selectedTheme }) {
   useEffect(() => {
@@ -12,10 +13,21 @@ export default function Layout({ onToggleTheme, selectedTheme }) {
     return () => document.removeEventListener('scroll', handleScroll);
   }, []);
   return (
-    <>
-      <Header onToggleTheme={onToggleTheme} selectedTheme={selectedTheme} />
-      <PostsList />
-      <Footer onToggleTheme={onToggleTheme} selectedTheme={selectedTheme} />
-    </>
+    <BrowserRouter>
+      <Header
+        onToggleTheme={onToggleTheme}
+        selectedTheme={selectedTheme}
+      />
+      <Nav>
+        <Link to="/">Home</Link>
+        <Link to="/posts">Posts</Link>
+        <Link to="/posts/:id">Post</Link>
+      </Nav>
+      <Routes />
+      <Footer
+        onToggleTheme={onToggleTheme}
+        selectedTheme={selectedTheme}
+      />
+    </BrowserRouter>
   );
 }

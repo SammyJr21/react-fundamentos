@@ -5,6 +5,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle[hash].js',
+    publicPath: '/'
   },
   mode: 'development',
   plugins: [
@@ -36,6 +37,7 @@ module.exports = {
   },
   devServer: {
     port: 3000,
+    historyApiFallback: true,
   },
   target: 'web',
 };
